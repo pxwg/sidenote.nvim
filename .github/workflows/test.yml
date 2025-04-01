@@ -16,7 +16,7 @@ jobs:
     - name: Setup Lua
       uses: leafo/gh-actions-lua@v10
       with:
-        luaVersion: "luajit"
+        luaVersion: "luajit-openresty"
     
     - name: Setup Luarocks
       uses: leafo/gh-actions-luarocks@v4
@@ -32,8 +32,9 @@ jobs:
         luarocks install luacheck
         luarocks install busted
         luarocks install luacov
+        luarocks install vusted
     
     - name: Run tests
       run: |
         cd $(pwd)
-        busted -v lua/test
+        vusted lua/test
