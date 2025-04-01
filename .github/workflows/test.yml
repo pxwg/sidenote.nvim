@@ -1,0 +1,39 @@
+name: Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Lua
+      uses: leafo/gh-actions-lua@v9
+      with:
+        luaVersion: "luajit-2.1.0-beta3"
+    
+    - name: Setup Luarocks
+      uses: leafo/gh-actions-luarocks@v4
+    
+    - name: Install Neovim
+      uses: rhysd/action-setup-vim@v1
+      with:
+        neovim: true
+        version: stable
+    
+    - name: Install test dependencies
+      run: |
+        luarocks install luacheck
+        luarocks install busted
+        luarocks install luacov
+    
+    - name: Run tests
+      run: |
+        cd $(pwd)
+        busted -v lua/test
