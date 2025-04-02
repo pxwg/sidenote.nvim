@@ -4,7 +4,7 @@ local M = {}
 math.randomseed(os.time() + os.clock() * 1000000 + tonumber(tostring({}):sub(8)))
 ---
 --- Generate a timestamp tag
---- @return number? timestamp tag
+--- @return integer? timestamp tag
 function M.generateTimestampTag()
   local date = os.date("*t")
   local random_number = math.random(10, 99)
