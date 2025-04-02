@@ -47,8 +47,8 @@ vim.api.nvim_create_user_command("SidenoteInsert", function()
   local vt_id = tags.generateTimestampTag()
   db.create_tbl(db_path)
 
-  --- update
-  if upd.is_sidenote_exist(line) == true then
+  --- update and unopened Sidenote
+  if upd.is_sidenote_exist(line) == true and id == 0 then
     local origin_text = db.get_by_line(db_path, line)[1].text
     ui.input_float({
       initial_text = origin_text,
@@ -62,6 +62,25 @@ vim.api.nvim_create_user_command("SidenoteInsert", function()
         vt.remove_virtual_text_from_line(buf, line - 1)
         if id > 0 then
           vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", vt_id)
+        end
+      end,
+    })
+    restore_all()
+  -- case of opened Sidenote
+  elseif upd.is_sidenote_exist(line) == true and id ~= 0 then
+    local origin_text = db.get_by_line(db_path, line)[1].text
+    ui.input_float({
+      initial_text = origin_text,
+      title = "Update Sidenote",
+      callback = function(text)
+        if text == "" then
+          db.delete_by_id(db_path, id)
+          return
+        end
+        db.update_by_id(db_path, id, { text = text, line = line })
+        vt.remove_virtual_text_from_line(buf, line - 1)
+        if id > 0 then
+          vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", id)
         end
       end,
     })
