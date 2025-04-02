@@ -150,6 +150,40 @@ function M.remove_virtual_text_from_line(bufnr, line_nr)
   vim.api.nvim_buf_clear_namespace(bufnr, namespace, line_nr, line_nr + 1)
 end
 
+--- Get the ID of virtual text at the current cursor position
+--- @param bufnr number?: The buffer number (defaults to current buffer)
+--- @param namespace number?: The namespace ID (defaults to the statusline_virt namespace)
+--- @return number extmark_id: The ID of the virtual text at cursor, or nil if none found
+function M.get_virtual_text_id_at_cursor(bufnr, namespace)
+  bufnr = vim.api.nvim_get_current_buf()
+  namespace = vim.g.namespace_id or vim.api.nvim_create_namespace("statusline_virt")
+
+  -- Get current cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local line = cursor_pos[1] - 1 -- Convert to 0-indexed
+  local col = cursor_pos[2]
+
+  -- Query extmarks at the current line
+  local extmarks = vim.api.nvim_buf_get_extmarks(bufnr, namespace, { line, 0 }, { line, -1 }, { details = true })
+
+  -- Find extmarks with virt_lines at the cursor position
+  for _, extmark in ipairs(extmarks) do
+    local id = extmark[1]
+    local ext_line = extmark[2]
+    local ext_col = extmark[3]
+    local details = extmark[4]
+
+    if details then
+      if details.virt_lines and ext_col <= col then
+        return id
+      end
+    end
+  end
+
+  return 1
+end
+
+_G.get_virtual_text_id_at_cursor = M.get_virtual_text_id_at_cursor
 -- test
 -- local text =
 --   [[Hello世界！今󠄂天是2023-π/2≈5.15的奇妙日期🌍！在α坐标系中，用户@张三_Dev需要将€50转换为¥或$，同时计算∑(n²)从n=1到∞。Ω公司发布的📱App 2.0支持≤5Gbps传输，但需注意⚠️：温度阈值应保持25°C±3%！代码段if (x != y) { cout << "错误❌"; } 包含中文注释//这里要处理ASCII码32~126。数学公式∮E·da = Q/ε₀展示∇·E=ρ/ε₀的微分形式。购物清单📋：🍎×6（$4.99）、📘×3（¥59.8/本），总价≈$4.99×6 + 59.8×3 = $29.94 + ￥179.4。音乐播放列表🎵：《最伟大的作品》- 周杰倫（Jay Chou） feat. 郎朗，码率320kbps@48kHz。地址示例：北京市海淀区#36号院©2023，地图坐标39°54'27"N 116°23'17"E。特殊符号测试：★☆☯☢☣♬♔♛⚡🔥💻✅🔍🛑🚫⚖️🔄📶📡🔑🔓💡❗❓‼️⁉️➡️⬅️↙️↗️🔀🔁🔂⏩⏪⏫⏬🎦🔅🔆🕒🕘🕧🔢🔣🔤🅰️🆎🆑🆘🆚]]

@@ -26,7 +26,7 @@ function M.input_float(opts)
 
   -- Create buffer for the floating window
   local buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
+  -- vim.api.nvim_set_option_value("buftype", "", { buf = buf })
   vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
   vim.api.nvim_set_option_value("filetype", "markdown", { buf = buf })
 
@@ -89,6 +89,9 @@ function M.input_float(opts)
     once = true,
     callback = function()
       local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      while #lines > 0 and lines[#lines] == "" do
+        table.remove(lines, #lines)
+      end
       local text = table.concat(lines, "\n")
       vim.schedule(function()
         if vim.api.nvim_win_is_valid(win) then
