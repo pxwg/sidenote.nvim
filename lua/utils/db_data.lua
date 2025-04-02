@@ -7,6 +7,7 @@ local M = {}
 
 --- @class SideNote
 --- @field public filepath string current file path of the side note
+--- @field public vt_id integer
 --- @field public text string the text content of the side note
 --- @field public col integer column position
 --- @field public line integer line position
@@ -82,7 +83,7 @@ function M.get_by_col(path, col)
   return result
 end
 
---- Function to get entries by line
+--- Function to get entries by id
 --- @param path string
 --- @param id number
 --- @return SideNote[]
@@ -91,6 +92,19 @@ function M.get_by_id(path, id)
   local result
   db:with_open(path, function()
     result = db:select("sidenotes", { where = { vt_id = id } })
+  end)
+  return result
+end
+
+--- Function to get entries by line
+--- @param path string
+--- @param line number
+--- @return SideNote[]
+function M.get_by_line(path, line)
+  local db = connect_to_db(path)
+  local result
+  db:with_open(path, function()
+    result = db:select("sidenotes", { where = { line = line } })
   end)
   return result
 end

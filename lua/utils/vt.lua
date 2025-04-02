@@ -102,7 +102,8 @@ end
 --- @param col_nr number: The column number to add the virtual line at
 --- @param text string: The text to display in the virtual line
 --- @param hl_group string: The highlight group to use for the virtual line
-function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group)
+--- @param id integer?
+function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group, id)
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
   hl_group = hl_group or "Comment"
@@ -128,17 +129,19 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
     table.insert(virt_lines, { { connector, "LineNr" }, { line, hl_group } })
   end
 
-  vim.api.nvim_buf_set_extmark(
+  local virt_id = vim.api.nvim_buf_set_extmark(
     bufnr,
     vim.g.namespace_id or vim.api.nvim_create_namespace("statusline_virt"),
     line_nr,
     col_nr,
     {
+      id = id or 1,
       virt_lines = virt_lines,
       virt_lines_above = false,
       hl_mode = "combine",
     }
   )
+  return virt_id
 end
 
 --- Remove virtual text to a line in a buffer
@@ -180,7 +183,7 @@ function M.get_virtual_text_id_at_cursor(bufnr, namespace)
     end
   end
 
-  return 1
+  return 0
 end
 
 _G.get_virtual_text_id_at_cursor = M.get_virtual_text_id_at_cursor
