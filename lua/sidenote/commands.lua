@@ -71,6 +71,6 @@ vim.api.nvim_create_user_command("SidenoteFoldAll", function()
   end
 end, {})
 
-vim.api.nvim_create_user_command("SideNoteTelescope", function()
+vim.api.nvim_create_user_command("SidenoteTelescope", function()
   require("picker.telescope").show_sidenotes()
 end, {})
