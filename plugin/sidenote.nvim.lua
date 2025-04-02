@@ -1,0 +1,1 @@
+require("sidenote").setup()
