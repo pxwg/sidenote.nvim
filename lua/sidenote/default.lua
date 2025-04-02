@@ -1,5 +1,23 @@
 local M = {}
 
+--- @class SideNoteWinOpts
+--- @field relative string
+--- @field style string
+--- @field border string
+--- @field title_pos string
+
+--- @class SideNoteInputOpts
+--- @field title string
+---  @field win_opts SideNoteWinOpts
+
+--- @class SideNoteVirtualTextOpts
+--- @field hl_group string
+
+--- @class SideNoteOpts
+--- @field input SideNoteInputOpts?
+--- @field virtual_text SideNoteVirtualTextOpts?
+
+--- @type SideNoteOpts
 M.default_opts = {
   input = {
     title = "Input",
