@@ -7,6 +7,7 @@ local M = {}
 --- @field public height number?: Height of the floating window (default: 6)
 --- @field public title string: Title of the window (default: "Input")
 --- @field public callback function: Called with the input text when closed
+--- @field public initial_text string?: Initial text to display in the window
 
 --- Creates a floating window at cursor position for user input
 --- @param opts SideNoteFloatOpt
@@ -16,6 +17,7 @@ function M.input_float(opts)
   local width = opts.width or 40
   local height = opts.height or 6
   local title = opts.title or "Input"
+  local initial_text = opts.initial_text or ""
 
   -- Get current cursor position
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
@@ -43,7 +45,7 @@ function M.input_float(opts)
 
   -- Window options
   local win_opts = {
-    relative = "win",
+    relative = "cursor",
     row = row,
     col = col,
     width = width,
@@ -54,13 +56,33 @@ function M.input_float(opts)
     title_pos = "center",
   }
 
+  -- Split initial text by newlines and insert into buffer
+  if initial_text and initial_text ~= "" then
+    local lines = {}
+    for line in (initial_text .. "\n"):gmatch("(.-)\n") do
+      table.insert(lines, line)
+    end
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  end
+
   local win = vim.api.nvim_open_win(buf, true, win_opts)
 
   vim.api.nvim_set_option_value("wrap", true, {})
   vim.api.nvim_set_option_value("modifiable", true, { buf = buf })
   vim.cmd("startinsert")
-
   local callback_fn = opts.callback
+
+  -- Position cursor at end of text if there's initial text
+  if initial_text and initial_text ~= "" then
+    vim.schedule(function()
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      local last_line_idx = #lines
+      local last_line = lines[last_line_idx] or ""
+      local last_col = vim.fn.strwidth(last_line)
+      vim.api.nvim_win_set_cursor(win, { last_line_idx, last_col })
+      vim.cmd("startinsert!") -- Ensure cursor is at end of text
+    end)
+  end
 
   vim.api.nvim_create_autocmd({ "BufLeave" }, {
     buffer = buf,
