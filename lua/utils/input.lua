@@ -1,5 +1,6 @@
 --- UI module for creating and managing side notes
 local M = {}
+local config_opts = require("sidenote").opts
 
 --- Creates a floating window at cursor position for user input
 --- @class SideNoteFloatOpt table Optional parameters:
@@ -26,7 +27,7 @@ function M.input_float(opts)
 
   -- Create buffer for the floating window
   local buf = vim.api.nvim_create_buf(false, true)
-  -- vim.api.nvim_set_option_value("buftype", "", { buf = buf })
+  vim.api.nvim_set_option_value("buftype", "nofile", { buf = buf })
   vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
   vim.api.nvim_set_option_value("filetype", "markdown", { buf = buf })
 
@@ -45,16 +46,12 @@ function M.input_float(opts)
 
   -- Window options
   local win_opts = {
-    relative = "cursor",
     row = row,
     col = col,
     width = width,
     height = height,
-    style = "minimal",
-    border = "rounded",
-    title = title,
-    title_pos = "center",
   }
+  win_opts = vim.tbl_extend("force", config_opts.input.win_opts, win_opts)
 
   -- Split initial text by newlines and insert into buffer
   if initial_text and initial_text ~= "" then

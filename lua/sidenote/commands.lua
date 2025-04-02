@@ -2,6 +2,7 @@ local db = require("utils.db_data")
 local path = require("utils.db_path")
 local tags = require("utils.db_tags")
 local ui = require("utils.input")
+local opts = require("sidenote.init").opts
 local upd = require("utils.update")
 local update = require("utils.update")
 local vt = require("utils.vt")
@@ -19,7 +20,7 @@ local function restore_all()
     local id = sidenote.vt_id
     if line < line_count and id > 0 then
       vt.remove_virtual_text_from_line(buf, line - 1)
-      vt.add_virtual_line_with_connector(buf, line - 1, col, sidenote.text, "Comment", id)
+      vt.add_virtual_line_with_connector(buf, line - 1, col, sidenote.text, opts.virtual_text.hl_group, id)
     end
   end
 end
@@ -60,9 +61,7 @@ vim.api.nvim_create_user_command("SidenoteInsert", function()
         end
         db.update_by_line(db_path, line, { text = text, vt_id = vt_id })
         vt.remove_virtual_text_from_line(buf, line - 1)
-        if id > 0 then
-          vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", vt_id)
-        end
+        vt.add_virtual_line_with_connector(buf, line - 1, col, text, opts.virtual_text.hl_group, vt_id)
       end,
     })
     restore_all()
@@ -80,7 +79,7 @@ vim.api.nvim_create_user_command("SidenoteInsert", function()
         db.update_by_id(db_path, id, { text = text, line = line })
         vt.remove_virtual_text_from_line(buf, line - 1)
         if id > 0 then
-          vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", id)
+          vt.add_virtual_line_with_connector(buf, line - 1, col, text, opts.virtual_text.hl_group, id)
         end
       end,
     })
@@ -96,7 +95,7 @@ vim.api.nvim_create_user_command("SidenoteInsert", function()
           text = text,
           vt_id = vt_id or 1,
         })
-        vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", vt_id)
+        vt.add_virtual_line_with_connector(buf, line - 1, col, text, opts.virtual_text.hl_group, vt_id)
       end,
     })
     restore_all()

@@ -1,5 +1,6 @@
 --- Manage virt_text in neovim
 local M = {}
+local config_opts = require("sidenote.init").opts
 
 --- @class VirtualText
 --- @field public hl_group string? highlight group
@@ -106,7 +107,7 @@ end
 function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group, id)
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
-  hl_group = hl_group or "Comment"
+  hl_group = hl_group or config_opts.virtual_text.hl_group
 
   -- Get window width for line wrapping calculation
   local win_width = vim.api.nvim_win_get_width(0)
@@ -186,7 +187,7 @@ function M.get_virtual_text_id_at_cursor(bufnr, namespace)
   return 0
 end
 
-_G.get_virtual_text_id_at_cursor = M.get_virtual_text_id_at_cursor
+_G.SNGetVTextIDatCursor = M.get_virtual_text_id_at_cursor
 -- test
 -- local text =
 --   [[Hello世界！今󠄂天是2023-π/2≈5.15的奇妙日期🌍！在α坐标系中，用户@张三_Dev需要将€50转换为¥或$，同时计算∑(n²)从n=1到∞。Ω公司发布的📱App 2.0支持≤5Gbps传输，但需注意⚠️：温度阈值应保持25°C±3%！代码段if (x != y) { cout << "错误❌"; } 包含中文注释//这里要处理ASCII码32~126。数学公式∮E·da = Q/ε₀展示∇·E=ρ/ε₀的微分形式。购物清单📋：🍎×6（$4.99）、📘×3（¥59.8/本），总价≈$4.99×6 + 59.8×3 = $29.94 + ￥179.4。音乐播放列表🎵：《最伟大的作品》- 周杰倫（Jay Chou） feat. 郎朗，码率320kbps@48kHz。地址示例：北京市海淀区#36号院©2023，地图坐标39°54'27"N 116°23'17"E。特殊符号测试：★☆☯☢☣♬♔♛⚡🔥💻✅🔍🛑🚫⚖️🔄📶📡🔑🔓💡❗❓‼️⁉️➡️⬅️↙️↗️🔀🔁🔂⏩⏪⏫⏬🎦🔅🔆🕒🕘🕧🔢🔣🔤🅰️🆎🆑🆘🆚]]
