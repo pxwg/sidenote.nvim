@@ -1,5 +1,5 @@
 local M = {}
-Mopts = {}
+M.opts = {}
 local default_opts = require("sidenote.default").default_opts
 
 function M.setup(user_opts)

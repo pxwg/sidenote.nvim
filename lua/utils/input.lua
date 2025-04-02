@@ -1,6 +1,6 @@
 --- UI module for creating and managing side notes
 local M = {}
-local config_opts = require("sidenote").opts
+local default_opts = require("sidenote.default").default_opts
 
 --- Creates a floating window at cursor position for user input
 --- @class SideNoteFloatOpt table Optional parameters:
@@ -17,7 +17,7 @@ function M.input_float(opts)
   opts = opts or {}
   local width = opts.width or 40
   local height = opts.height or 6
-  local title = opts.title or "Input"
+  local title = opts.title or default_opts.input.title
   local initial_text = opts.initial_text or ""
 
   -- Get current cursor position
@@ -46,12 +46,13 @@ function M.input_float(opts)
 
   -- Window options
   local win_opts = {
+    title = title,
     row = row,
     col = col,
     width = width,
     height = height,
   }
-  win_opts = vim.tbl_extend("force", config_opts.input.win_opts, win_opts)
+  win_opts = vim.tbl_extend("force", default_opts.input.win_opts, win_opts)
 
   -- Split initial text by newlines and insert into buffer
   if initial_text and initial_text ~= "" then
