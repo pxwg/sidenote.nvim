@@ -2,7 +2,7 @@
 local M = {}
 
 --- @class VirtualText
---- @field public hl_group string highlight group
+--- @field public hl_group string? highlight group
 --- @field public text string text to display
 --- @field public col integer column number
 --- @field public line integer line number
