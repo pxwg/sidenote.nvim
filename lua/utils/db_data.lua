@@ -123,6 +123,20 @@ function M.update_by_id(path, id, updates)
   end)
 end
 
+--- Function to update an entry by column
+--- @param path string
+--- @param line number
+--- @param updates table fields to update
+function M.update_by_line(path, line, updates)
+  local db = connect_to_db(path)
+  db:with_open(path, function()
+    db:update("sidenotes", {
+      where = { line = line },
+      set = updates,
+    })
+  end)
+end
+
 --- Function to delete an entry by column
 --- @param path string
 --- @param id number
@@ -132,6 +146,19 @@ function M.delete_by_id(path, id)
   local result
   db:with_open(path, function()
     result = db:delete("sidenotes", { where = { vt_id = id } })
+  end)
+  return result
+end
+
+--- Function to delete an entry by column
+--- @param path string
+--- @param line number
+--- @return boolean success
+function M.delete_by_line(path, line)
+  local db = connect_to_db(path)
+  local result
+  db:with_open(path, function()
+    result = db:delete("sidenotes", { where = { line = line } })
   end)
   return result
 end
