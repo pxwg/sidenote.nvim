@@ -1,1 +1,1 @@
-require("sidenote").setup()
+-- require("sidenote.init").setup()

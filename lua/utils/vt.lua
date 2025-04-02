@@ -1,6 +1,6 @@
 --- Manage virt_text in neovim
 local M = {}
-local config_opts = require("sidenote.init").opts
+local default_opts = require("sidenote.default").default_opts
 
 --- @class VirtualText
 --- @field public hl_group string? highlight group
@@ -102,12 +102,12 @@ end
 --- @param line_nr number: The line number to add the virtual line after
 --- @param col_nr number: The column number to add the virtual line at
 --- @param text string: The text to display in the virtual line
---- @param hl_group string: The highlight group to use for the virtual line
+--- @param hl_group string?: The highlight group to use for the virtual line
 --- @param id integer?
 function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group, id)
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
-  hl_group = hl_group or config_opts.virtual_text.hl_group
+  hl_group = hl_group or default_opts.virtual_text.hl_group
 
   -- Get window width for line wrapping calculation
   local win_width = vim.api.nvim_win_get_width(0)
