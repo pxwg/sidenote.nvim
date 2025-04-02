@@ -37,48 +37,50 @@ end, {})
 
 --- TODO: be sure to reset all the virtual text when the line has been changed
 vim.api.nvim_create_user_command("SidenoteInsert", function()
-  restore_all()
+  -- restore_all()
   local file_path = vim.api.nvim_buf_get_name(0)
   local db_path = path.get_db_path(file_path)
   local line = vim.api.nvim_win_get_cursor(0)[1]
   local col = vim.api.nvim_win_get_cursor(0)[2]
   local buf = vim.api.nvim_get_current_buf()
   local id = vt.get_virtual_text_id_at_cursor()
+  local vt_id = tags.generateTimestampTag()
   db.create_tbl(db_path)
 
   --- update
   if upd.is_sidenote_exist(line) == true then
-    local origin_text = db.get_by_id(db_path, id)[1].text or ""
+    local origin_text = db.get_by_line(db_path, line)[1].text
     ui.input_float({
       initial_text = origin_text,
       title = "Update Sidenote",
       callback = function(text)
         if text == "" then
-          db.delete_by_id(db_path, id)
+          db.delete_by_line(db_path, line)
           return
         end
-        db.update_by_id(db_path, id, { text = text, line = line })
+        db.update_by_line(db_path, line, { text = text, vt_id = vt_id })
         vt.remove_virtual_text_from_line(buf, line - 1)
         if id > 0 then
-          vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", id)
+          vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", vt_id)
         end
       end,
     })
+    restore_all()
   else
-    local vt_id = tags.generateTimestampTag()
     ui.input_float({
       title = "Insert Sidenote",
       callback = function(text)
         db.add_entry(db_path, {
           filepath = file_path,
-          line = vim.api.nvim_win_get_cursor(0)[1],
-          col = vim.api.nvim_win_get_cursor(0)[2],
+          line = line,
+          col = col,
           text = text,
           vt_id = vt_id or 1,
         })
         vt.add_virtual_line_with_connector(buf, line - 1, col, text, "Comment", vt_id)
       end,
     })
+    restore_all()
   end
 end, {})
 
