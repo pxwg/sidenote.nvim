@@ -46,7 +46,7 @@ function M.wrap_text_to_fit_width(text, max_display_width)
       local char_width = M.get_display_width(char)
 
       -- Track the last space for word breaking
-      if char == " " then
+      if char == " " and current_pos == max_display_width - 1 then
         last_space_pos = chunk_end
       end
 
@@ -88,6 +88,8 @@ end
 --- @param bufnr number: The buffer number to add the virtual line to
 --- @param line_nr number: The line number to add the virtual line after
 --- @param col_nr number: The column number to add the virtual line at
+--- @param text string: The text to display in the virtual line
+--- @param hl_group string: The highlight group to use for the virtual line
 function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group)
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
@@ -98,21 +100,17 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
   local max_display_width = win_width - col_nr - 8
 
   local lines = M.wrap_text_to_fit_width(text, max_display_width)
+  print(vim.inspect(lines))
 
   local virt_lines = {}
-
-  --- TODO: Custumizable default hl_group
-  table.insert(virt_lines, { { "│", "LineNr" } })
 
   -- Add the text lines with appropriate connectors
   for i, line in ipairs(lines) do
     local connector
-    if i == 1 then
+    if i == 1 and i ~= #lines then
       connector = "├─ " -- First line gets a tee connector
     elseif i == #lines then
       connector = "└─ " -- Last line gets a corner connector
-    else
-      connector = "│  " -- Middle lines get a vertical line with space
     end
 
     table.insert(virt_lines, { { connector, "LineNr" }, { line, hl_group } })

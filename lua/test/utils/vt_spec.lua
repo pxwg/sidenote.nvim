@@ -22,6 +22,25 @@ describe("vt.wrap_text_to_fit_width", function()
     end
   end)
 
+  it("should correctly wrap complex text with spaces", function()
+    local max_display_width = 134
+    local text = [[Hello世界 hello]]
+
+    local expected_output = {
+      [[Hello世界 hello]],
+    }
+
+    local result = vt.wrap_text_to_fit_width(text, max_display_width)
+
+    -- Test length matches
+    assert.equals(#expected_output, #result)
+
+    -- Test content of each line
+    for i, line in ipairs(expected_output) do
+      assert.equals(line, result[i])
+    end
+  end)
+
   it("should correctly wrap complex text with symbols and emojis", function()
     local max_display_width = 134
     local text =
