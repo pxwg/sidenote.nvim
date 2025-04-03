@@ -100,7 +100,7 @@ end
 --- "└─ Hello, world!"
 --- @param bufnr number: The buffer number to add the virtual line to
 --- @param line_nr number: The line number to add the virtual line after
---- @param col_nr number: The column number to add the virtual line at
+--- @param col_nr number: The (visual) column number to add the virtual line at
 --- @param text string: The text to display in the virtual line
 --- @param hl_group string?: The highlight group to use for the virtual line
 --- @param id integer?
@@ -108,20 +108,27 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
   hl_group = hl_group or default_opts.virtual_text.hl_group
-
+  local line = vim.api.nvim_get_current_line()
+  local text_until_col = line and string.sub(line, 1, col_nr) or ""
+  local text_length = M.get_display_width(text_until_col)
   -- Get window width for line wrapping calculation
   local win_width = vim.api.nvim_win_get_width(0)
-  local max_display_width = win_width - col_nr - 10
+  local max_display_width = win_width - 10
 
   local lines = M.wrap_text_to_fit_width(text, max_display_width)
   local virt_lines = {}
 
+  -- First virtual line is the horizontal connector
+  -- local padding = string.rep(" ", col_nr)
+  table.insert(
+    virt_lines,
+    { { "┌─" .. string.rep("─", (text_length - 2) % max_display_width) .. "◆", "LineNr" } }
+  )
+
   -- Add the text lines with appropriate connectors
   for i, line in ipairs(lines) do
     local connector
-    if i == 1 then
-      connector = #lines > 1 and "├─ " or "└─ "
-    elseif i == #lines then
+    if i == #lines then
       connector = "└─ "
     else
       connector = "│  "
@@ -134,7 +141,7 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
     bufnr,
     vim.g.namespace_id or vim.api.nvim_create_namespace("statusline_virt"),
     line_nr,
-    col_nr,
+    0,
     {
       id = id or 1,
       virt_lines = virt_lines,
@@ -192,7 +199,6 @@ _G.SNGetVTextIDatCursor = M.get_virtual_text_id_at_cursor
 -- local text =
 --   [[Hello世界！今󠄂天是2023-π/2≈5.15的奇妙日期🌍！在α坐标系中，用户@张三_Dev需要将€50转换为¥或$，同时计算∑(n²)从n=1到∞。Ω公司发布的📱App 2.0支持≤5Gbps传输，但需注意⚠️：温度阈值应保持25°C±3%！代码段if (x != y) { cout << "错误❌"; } 包含中文注释//这里要处理ASCII码32~126。数学公式∮E·da = Q/ε₀展示∇·E=ρ/ε₀的微分形式。购物清单📋：🍎×6（$4.99）、📘×3（¥59.8/本），总价≈$4.99×6 + 59.8×3 = $29.94 + ￥179.4。音乐播放列表🎵：《最伟大的作品》- 周杰倫（Jay Chou） feat. 郎朗，码率320kbps@48kHz。地址示例：北京市海淀区#36号院©2023，地图坐标39°54'27"N 116°23'17"E。特殊符号测试：★☆☯☢☣♬♔♛⚡🔥💻✅🔍🛑🚫⚖️🔄📶📡🔑🔓💡❗❓‼️⁉️➡️⬅️↙️↗️🔀🔁🔂⏩⏪⏫⏬🎦🔅🔆🕒🕘🕧🔢🔣🔤🅰️🆎🆑🆘🆚]]
 --
--- --
 -- M.add_virtual_line_with_connector(0, 153, 0, text, "Comment")
 
 return M
