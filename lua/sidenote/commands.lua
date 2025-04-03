@@ -39,7 +39,7 @@ local function sign_in_all_commands(config_opts)
 
   --- TODO: be sure to reset all the virtual text when the line has been changed
   vim.api.nvim_create_user_command("SidenoteInsert", function()
-    -- restore_all()
+    restore_all()
     local file_path = vim.api.nvim_buf_get_name(0)
     local db_path = path.get_db_path(file_path)
     local line = vim.api.nvim_win_get_cursor(0)[1]
