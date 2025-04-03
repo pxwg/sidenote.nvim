@@ -21,7 +21,16 @@ local function sign_in_all_commands(config_opts)
       local id = sidenote.vt_id
       if line <= line_count and id > 0 then
         vt.remove_virtual_text_from_line(buf, line - 1)
-        vt.add_virtual_line_with_connector(buf, line - 1, col, sidenote.text, config_opts.virtual_text.hl_group, id)
+        vt.add_virtual_line_with_connector(
+          buf,
+          line - 1,
+          col,
+          sidenote.text,
+          config_opts.virtual_text.hl_group,
+          id,
+          config_opts.virtual_text.upper_connector,
+          config_opts.virtual_text.lower_connector
+        )
       end
     end
   end
@@ -63,7 +72,16 @@ local function sign_in_all_commands(config_opts)
           db.update_by_line(db_path, line, { text = text, vt_id = vt_id, col = col })
           vt.remove_virtual_text_from_line(buf, line - 1)
           local hl_group = config_opts.virtual_text.hl_group
-          vt.add_virtual_line_with_connector(buf, line - 1, col, text, hl_group, vt_id)
+          vt.add_virtual_line_with_connector(
+            buf,
+            line - 1,
+            col,
+            text,
+            hl_group,
+            vt_id,
+            config_opts.virtual_text.upper_connector,
+            config_opts.virtual_text.lower_connector
+          )
         end,
       })
       restore_all()
@@ -81,7 +99,16 @@ local function sign_in_all_commands(config_opts)
           vt.remove_virtual_text_from_line(buf, line - 1)
           db.update_by_id(db_path, id, { text = text, line = line, col = col })
           local hl_group = config_opts.virtual_text.hl_group
-          vt.add_virtual_line_with_connector(buf, line - 1, col, text, hl_group, id)
+          vt.add_virtual_line_with_connector(
+            buf,
+            line - 1,
+            col,
+            text,
+            hl_group,
+            id,
+            config_opts.virtual_text.upper_connector,
+            config_opts.virtual_text.lower_connector
+          )
         end,
       })
       restore_all()
@@ -96,7 +123,16 @@ local function sign_in_all_commands(config_opts)
             text = text,
             vt_id = vt_id or 1,
           })
-          vt.add_virtual_line_with_connector(buf, line - 1, col, text, config_opts.virtual_text.hl_group, vt_id)
+          vt.add_virtual_line_with_connector(
+            buf,
+            line - 1,
+            col,
+            text,
+            config_opts.virtual_text.hl_group,
+            vt_id,
+            config_opts.virtual_text.upper_connector,
+            config_opts.virtual_text.lower_connector
+          )
         end,
       })
       restore_all()

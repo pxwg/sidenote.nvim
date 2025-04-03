@@ -104,7 +104,9 @@ end
 --- @param text string: The text to display in the virtual line
 --- @param hl_group string?: The highlight group to use for the virtual line
 --- @param id integer?
-function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group, id)
+--- @param upper_connector string?: The connector to use for the upper line
+--- @param lower_connector string?: The connector to use for the lower line
+function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group, id, upper_connector, lower_connector)
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
   hl_group = hl_group or default_opts.virtual_text.hl_group
@@ -122,7 +124,9 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
   -- local padding = string.rep(" ", col_nr)
   table.insert(virt_lines, {
     {
-      "┌─" .. string.rep("─", text_length >= 2 and (text_length - 2) % max_display_width or 0) .. "◆",
+      (upper_connector or default_opts.virtual_text.upper_connector)
+        .. string.rep("─", text_length >= 2 and (text_length - 2) % max_display_width or 0)
+        .. "◆",
       "LineNr",
     },
   })
@@ -131,7 +135,7 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
   for i, line in ipairs(lines) do
     local connector
     if i == #lines then
-      connector = "└─ "
+      connector = lower_connector or default_opts.virtual_text.lower_connector
     else
       connector = "│  "
     end
