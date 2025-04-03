@@ -106,7 +106,18 @@ end
 --- @param id integer?
 --- @param upper_connector string?: The connector to use for the upper line
 --- @param lower_connector string?: The connector to use for the lower line
-function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_group, id, upper_connector, lower_connector)
+--- @param prefix string?: The prefix to use for the virtual line
+function M.add_virtual_line_with_connector(
+  bufnr,
+  line_nr,
+  col_nr,
+  text,
+  hl_group,
+  id,
+  upper_connector,
+  lower_connector,
+  prefix
+)
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
   hl_group = hl_group or default_opts.virtual_text.hl_group
@@ -124,9 +135,10 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
   -- local padding = string.rep(" ", col_nr)
   table.insert(virt_lines, {
     {
-      (upper_connector or default_opts.virtual_text.upper_connector)
-        .. string.rep("─", text_length >= 2 and (text_length - 2) % max_display_width or 0)
-        .. "◆",
+      (upper_connector or default_opts.virtual_text.upper_connector) .. string.rep(
+        "─",
+        text_length >= 2 and (text_length - 2) % max_display_width or 0
+      ) .. prefix or default_opts.virtual_text.prefix,
       "LineNr",
     },
   })

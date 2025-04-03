@@ -14,6 +14,7 @@ local M = {}
 --- @field hl_group string?
 --- @field upper_connector string?
 --- @field lower_connector string?
+--- @field prefix string?
 
 --- @class SideNoteOpts
 --- @field input SideNoteInputOpts?
@@ -34,6 +35,7 @@ M.default_opts = {
     hl_group = "Comment",
     upper_connector = "┌─",
     lower_connector = "└─",
+    prefix = "◆",
   },
 }
 
