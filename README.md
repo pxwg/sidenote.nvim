@@ -2,6 +2,17 @@
 
 *WIP*: This plugin is still in development. The basic functionality is there, but there are still some bugs and missing features. There are many possible breaking changes. Be free to PR!
 
+<p align="center">
+  <img src="./fig/79F25609-7B02-41D2-BC15-E2F8DD5A269E.jpeg" alt="Sidenote">
+</p>
+
+## 🤔Introduction
+
+Writing sidenote would be helpful while taking notes, writing articles, or even writing code. This plugin allows you to insert and manage sidenotes in your Neovim buffer. It uses a SQLite database to store the sidenotes, so you can easily restore them later.
+
+The sidenote would highly configured for being compatible with folding text and CJK charactors (which always unrealized in neovim).
+
+
 ## 🛠Installation
 
 Use your favorite plugin manager. For example, with `lazy.nvim`:
