@@ -39,6 +39,7 @@ return {
       hl_group = "Comment",
       upper_connector = "┌─",
       lower_connector = "└─",
+      prefix = "◆",
     },
   },
 }
