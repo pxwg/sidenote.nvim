@@ -29,7 +29,8 @@ local function sign_in_all_commands(config_opts)
           config_opts.virtual_text.hl_group,
           id,
           config_opts.virtual_text.upper_connector,
-          config_opts.virtual_text.lower_connector
+          config_opts.virtual_text.lower_connector,
+          config_opts.virtual_text.prefix
         )
       end
     end
@@ -80,7 +81,8 @@ local function sign_in_all_commands(config_opts)
             hl_group,
             vt_id,
             config_opts.virtual_text.upper_connector,
-            config_opts.virtual_text.lower_connector
+            config_opts.virtual_text.lower_connector,
+            config_opts.virtual_text.prefix
           )
         end,
       })
@@ -107,7 +109,8 @@ local function sign_in_all_commands(config_opts)
             hl_group,
             id,
             config_opts.virtual_text.upper_connector,
-            config_opts.virtual_text.lower_connector
+            config_opts.virtual_text.lower_connector,
+            config_opts.virtual_text.prefix
           )
         end,
       })
@@ -131,7 +134,8 @@ local function sign_in_all_commands(config_opts)
             config_opts.virtual_text.hl_group,
             vt_id,
             config_opts.virtual_text.upper_connector,
-            config_opts.virtual_text.lower_connector
+            config_opts.virtual_text.lower_connector,
+            config_opts.virtual_text.prefix
           )
         end,
       })
