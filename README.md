@@ -8,7 +8,7 @@
 
 ## 🤔Introduction
 
-Writing sidenote would be helpful while taking notes, writing articles, or even writing code. This plugin allows you to insert and manage sidenotes in your Neovim buffer. It uses a SQLite database to store the sidenotes, so you can easily restore them later.
+Writing sidenote would be helpful while taking notes, writing articles, or even writing code. This plugin allows you to insert and manage sidenotes in your Neovim buffer. It uses a SQLite database to store the sidenotes (based on [sqlite.lua](https://github.com/kkharji/sqlite.lua)), so you can easily restore them later.
 
 The sidenote would highly configured for being compatible with folding text and CJK charactors (which always unrealized in neovim).
 
