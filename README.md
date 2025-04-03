@@ -3,7 +3,7 @@
 *WIP*: This plugin is still in development. The basic functionality is there, but there are still some bugs and missing features. There are many possible breaking changes. Be free to PR!
 
 <p align="center">
-  <img src="./fig/79F25609-7B02-41D2-BC15-E2F8DD5A269E.jpeg" alt="Sidenote">
+  <img src="./fig/showcase.jpeg" alt="Sidenote">
 </p>
 
 ## 🤔Introduction
