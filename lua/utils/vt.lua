@@ -108,8 +108,8 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
   bufnr = bufnr or 0
   --- TODO: Custumizable default hl_group
   hl_group = hl_group or default_opts.virtual_text.hl_group
-  local line = vim.api.nvim_get_current_line()
-  local text_until_col = line and string.sub(line, 1, col_nr) or ""
+  local current_line = vim.api.nvim_get_current_line()
+  local text_until_col = current_line and string.sub(current_line, 1, col_nr) or ""
   local text_length = M.get_display_width(text_until_col)
   -- Get window width for line wrapping calculation
   local win_width = vim.api.nvim_win_get_width(0)
@@ -120,10 +120,12 @@ function M.add_virtual_line_with_connector(bufnr, line_nr, col_nr, text, hl_grou
 
   -- First virtual line is the horizontal connector
   -- local padding = string.rep(" ", col_nr)
-  table.insert(
-    virt_lines,
-    { { "┌─" .. string.rep("─", (text_length - 2) % max_display_width) .. "◆", "LineNr" } }
-  )
+  table.insert(virt_lines, {
+    {
+      "┌─" .. string.rep("─", text_length >= 2 and (text_length - 2) % max_display_width or 0) .. "◆",
+      "LineNr",
+    },
+  })
 
   -- Add the text lines with appropriate connectors
   for i, line in ipairs(lines) do
