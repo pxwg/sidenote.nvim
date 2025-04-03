@@ -7,7 +7,7 @@ local upd = require("utils.update")
 local vt = require("utils.vt")
 local M = {}
 
-local function sign_in_all_commands(config_opts)
+local function subscribe_all_commands(config_opts)
   local function restore_all()
     local filepath = vim.api.nvim_buf_get_name(0)
     local db_path = path.get_db_path(filepath)
@@ -166,12 +166,12 @@ end
 
 function M.setup_commands(in_opts)
   opts = in_opts
-  sign_in_all_commands(opts)
+  subscribe_all_commands(opts)
 end
 
 function M.update_opts(in_opts)
   opts = in_opts
-  sign_in_all_commands(opts)
+  subscribe_all_commands(opts)
 end
 
 return M

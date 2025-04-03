@@ -11,6 +11,12 @@ function M.setup(user_opts)
   else
     require("sidenote.commands").update_opts(M.opts)
   end
+
+  if not package.loaded["sidenote.autocmd"] then
+    require("sidenote.autocmd").setup_autocmds(M.opts)
+  else
+    require("sidenote.autocmd").update_autocmds(M.opts)
+  end
 end
 
 return M
