@@ -19,7 +19,7 @@ local function sign_in_all_commands(config_opts)
       local line = sidenote.line
       local col = sidenote.col
       local id = sidenote.vt_id
-      if line < line_count and id > 0 then
+      if line <= line_count and id > 0 then
         vt.remove_virtual_text_from_line(buf, line - 1)
         vt.add_virtual_line_with_connector(buf, line - 1, col, sidenote.text, config_opts.virtual_text.hl_group, id)
       end
@@ -60,7 +60,7 @@ local function sign_in_all_commands(config_opts)
             db.delete_by_line(db_path, line)
             return
           end
-          db.update_by_line(db_path, line, { text = text, vt_id = vt_id })
+          db.update_by_line(db_path, line, { text = text, vt_id = vt_id, col = col })
           vt.remove_virtual_text_from_line(buf, line - 1)
           local hl_group = config_opts.virtual_text.hl_group
           vt.add_virtual_line_with_connector(buf, line - 1, col, text, hl_group, vt_id)
@@ -72,17 +72,16 @@ local function sign_in_all_commands(config_opts)
       local origin_text = db.get_by_line(db_path, line)[1].text
       ui.input_float({
         initial_text = origin_text,
-        title = "Insert Sidenote",
+        title = "Update Sidenote",
         callback = function(text)
           if text == "" then
             db.delete_by_id(db_path, id)
             return
           end
           vt.remove_virtual_text_from_line(buf, line - 1)
-          if id > 0 then
-            local hl_group = config_opts.virtual_text.hl_group
-            vt.add_virtual_line_with_connector(buf, line - 1, col, text, hl_group, id)
-          end
+          db.update_by_id(db_path, id, { text = text, line = line, col = col })
+          local hl_group = config_opts.virtual_text.hl_group
+          vt.add_virtual_line_with_connector(buf, line - 1, col, text, hl_group, id)
         end,
       })
       restore_all()
