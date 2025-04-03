@@ -1,17 +1,19 @@
 local M = {}
 
 --- @class SideNoteWinOpts
---- @field relative string
---- @field style string
---- @field border string
---- @field title_pos string
+--- @field relative string?
+--- @field style string?
+--- @field border string?
+--- @field title_pos string?
 
 --- @class SideNoteInputOpts
---- @field title string
----  @field win_opts SideNoteWinOpts
+--- @field title string?
+--- @field win_opts SideNoteWinOpts?
 
 --- @class SideNoteVirtualTextOpts
---- @field hl_group string
+--- @field hl_group string?
+--- @field upper_connector string?
+--- @field lower_connector string?
 
 --- @class SideNoteOpts
 --- @field input SideNoteInputOpts?
@@ -30,6 +32,8 @@ M.default_opts = {
   },
   virtual_text = {
     hl_group = "Comment",
+    upper_connector = "┌─",
+    lower_connector = "└─",
   },
 }
 
