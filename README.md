@@ -24,6 +24,7 @@ return {
   dependencies = {
     { "kkharji/sqlite.lua" }, --- database for storing notes
   },
+  --- @type SideNoteOpts
   opts = {
     input = {
       title = "Input",
@@ -36,6 +37,8 @@ return {
     },
     virtual_text = {
       hl_group = "Comment",
+      upper_connector = "┌─",
+      lower_connector = "└─",
     },
   },
 }
